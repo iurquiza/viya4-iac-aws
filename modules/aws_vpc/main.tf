@@ -195,12 +195,6 @@ resource "aws_route_table" "private" {
 
   vpc_id = local.vpc_id
 
-  route {
-    #count                       = var.using_peered_vpc ? 1 : 0
-    cidr_block                  = var.peered_vpc_cidr
-    vpc_peering_connection_id   = var.peered_vpc_id
-  }
-
   tags = merge(
     {
       "Name" = format(
@@ -298,6 +292,18 @@ resource "aws_route" "private_nat_gateway" {
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.nat_gateway.*.id, count.index)
+
+  timeouts {
+    create = "5m"
+  }
+}
+
+resource "aws_route" "private_peered_vpc" {
+  count = var.using_peered_vpc ? 1 : 0
+
+  route_table_id            = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block    = var.peered_vpc_cidr
+  vpc_peering_connection_id = var.peered_vpc_id
 
   timeouts {
     create = "5m"

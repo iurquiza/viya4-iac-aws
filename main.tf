@@ -152,16 +152,17 @@ module "eks" {
   eks_managed_node_group_defaults = {
     create_security_group   = false
     vpc_security_group_ids  = [local.workers_security_group_id]
-    placement = {
-      availability_zone = data.aws_availability_zones.available.names[0]
-      group_name        = aws_placement_group.eks.name
-    }
-    launch_template_tags = {
-      placementGroup = "true"
-    }
-
-    # Tag the LT itself
-    tags       = merge(var.tags, { placementGroup = "true" })
+    # placement = {
+    #   availability_zone = data.aws_availability_zones.available.names[0]
+    #   group_name        = aws_placement_group.eks.name
+    # }
+    # launch_template_tags = {
+    #   placementGroup = "true"
+    # }
+ 
+    # # Tag the LT itself
+    # tags       = merge(var.tags, { placementGroup = "true" })
+    tags       = var.tags
     subnet_ids = [module.vpc.private_subnets[0]]
   }
   
@@ -298,11 +299,11 @@ module "fsx_csi_driver_controller" {
   depends_on   = [module.eks]
 }
 
-resource "aws_placement_group" "eks" {
-  name     = "eks-placement-group"
-  strategy = "cluster"
-  tags = {
-    placementGroup  = "true",
-    applicationType = "eks"
-  }
-}
+# resource "aws_placement_group" "eks" {
+#   name     = "eks-placement-group"
+#   strategy = "cluster"
+#   tags = {
+#     placementGroup  = "true",
+#     applicationType = "eks"
+#   }
+# }
