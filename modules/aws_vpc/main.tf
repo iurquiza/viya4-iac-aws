@@ -195,6 +195,12 @@ resource "aws_route_table" "private" {
 
   vpc_id = local.vpc_id
 
+  route {
+    #count                       = var.using_peered_vpc ? 1 : 0
+    cidr_block                  = var.peered_vpc_cidr
+    vpc_peering_connection_id   = var.peered_vpc_id
+  }
+
   tags = merge(
     {
       "Name" = format(

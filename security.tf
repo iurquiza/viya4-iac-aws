@@ -106,6 +106,19 @@ resource "aws_security_group_rule" "cluster_ingress" {
     security_group_id        = local.cluster_security_group_id
   }
 
+resource "aws_security_group_rule" "peered_vpc_ingress" {
+
+    count                    = var.using_peered_vpc ? 1 : 0
+
+    type                     = "ingress"
+    description              = "Allow peered VPC to communicate with the EKS cluster API."
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = [var.peered_vpc_cidr]
+    security_group_id        = local.cluster_security_group_id
+  }
+
 
 resource "aws_security_group" "workers_security_group" {
   name   = "${var.prefix}-eks_worker_sg"

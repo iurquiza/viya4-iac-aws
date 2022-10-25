@@ -599,6 +599,24 @@ variable "cluster_api_mode" {
   }
 }
 
+variable "using_peered_vpc" {
+    description = "Using peered VPC to deploy private cluster."
+    type        = bool
+    default     = false
+}
+
+variable "peered_vpc_cidr" {
+  description = "Peer VPC CIDR block"
+  type    = string
+  default = "172.31.0.0/16"
+}
+
+variable "peered_vpc_id" {
+  type    = string
+  default = null
+  description = "Pre-exising id of peered VPC."
+}
+
 variable "vpc_private_endpoints" {
    description = "Endpoints needed for private cluster"
    type        = list(string)

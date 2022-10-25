@@ -210,6 +210,9 @@ Custom policy:
 | autoscaling_enabled | Enable cluster autoscaling | bool | true | |
 | ssh_public_key | File name of public ssh key for jump and nfs VM | string | "~/.ssh/id_rsa.pub" | Required with `create_jump_vm=true` or `storage_type=standard` |
 | cluster_api_mode | Public or private IP for the cluster api| string|"public"|Valid Values: "public", "private" |
+| using_peered_vpc | Set to true if you are using a peered VPC when setting `cluster_api_mode = "private"` bool | false | This will add a route to the peered VPC cidr block and add a security group rule to cluster security group to allow all traffic from the peered VPC  |
+| peered_vpc_cidr | Address space of the peered VPC | string | "172.31.0.0/16" | This variable is ignored when `using_peered_vpc` is set to false. |
+ | vpc_id | ID of existing peered VPC | string | null | This variable is ignored when `using_peered_vpc` is set to false. |
 
 ## Node Pools
 
