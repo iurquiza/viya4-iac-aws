@@ -80,6 +80,12 @@ module "vpc" {
   private_subnet_tags = merge(var.tags, { "kubernetes.io/role/internal-elb" = "1" }, { "kubernetes.io/cluster/${local.cluster_name}" = "shared" })
 }
 
+resource "aws_key_pair" "eks" {
+  key_name   = "${local.cluster_name}-admin"
+  public_key = file(var.ssh_public_key)
+  count      = var.cluster_node_ssh_access ? 1 : 0
+}
+
 # EKS Setup - https://github.com/terraform-aws-modules/terraform-aws-eks
 module "eks" {
   source                                         = "terraform-aws-modules/eks/aws"

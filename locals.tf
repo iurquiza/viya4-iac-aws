@@ -71,6 +71,7 @@ locals {
       launch_template_name            = "${local.cluster_name}-default-lt"
       launch_template_use_name_prefix = true
       tags                            = var.autoscaling_enabled ? merge(var.tags, { key = "k8s.io/cluster-autoscaler/${local.cluster_name}", value = "owned", propagate_at_launch = true }, { key = "k8s.io/cluster-autoscaler/enabled", value = "true", propagate_at_launch = true}) : var.tags
+      key_name = var.cluster_node_ssh_access ? aws_key_pair.eks[0].key_name : ""
     }
   }
 
@@ -118,6 +119,7 @@ locals {
         launch_template_name            = "${local.cluster_name}-${key}-lt"
         launch_template_use_name_prefix = true
         tags                            = var.autoscaling_enabled ? merge(var.tags, { key = "k8s.io/cluster-autoscaler/${local.cluster_name}", value = "owned", propagate_at_launch = true }, { key = "k8s.io/cluster-autoscaler/enabled", value = "true", propagate_at_launch = true}) : var.tags
+        key_name = var.cluster_node_ssh_access ? aws_key_pair.eks[0].key_name : ""
       }
   }
 
